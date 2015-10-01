@@ -6,6 +6,7 @@ using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Reactive.Testing;
 
 namespace SupportingCodeForTalk
 {
@@ -13,16 +14,21 @@ namespace SupportingCodeForTalk
     {
         static void Main(string[] args)
         {            
+            TestScheduler scheduler = new TestScheduler();
+
             var heartbeats = Observable.Generate(
                 0, 
-                i => i < 5,
+                i => i < 10,
                 i => i + 1, 
                 _ => new Heartbeat(),
-                i => i == 3 ? TimeSpan.FromSeconds(5) : TimeSpan.FromSeconds(2));
+                i => i == 3 || i == 5 ? TimeSpan.FromSeconds(5) : TimeSpan.FromSeconds(2),
+                scheduler);
 
-            heartbeats.Timestamp().TimeInterval().Dump("Hearbeat Stream");
+            heartbeats.Timestamp(scheduler).TimeInterval(scheduler).Dump("Hearbeat Stream");
 
-            heartbeats.LostContact().Dump("Lost Contact Stream");
+            heartbeats.LostContact(scheduler).Dump("Lost Contact Stream");
+
+            scheduler.Start();
 
             Console.WriteLine("Here");
             Console.ReadKey();
@@ -44,13 +50,13 @@ namespace SupportingCodeForTalk
 
     static class ServerUptime
     {
-        public static IObservable<HeartbeatLost> LostContact(this IObservable<Event> heartbeatMessages)
+        public static IObservable<HeartbeatLost> LostContact(this IObservable<Event> heartbeatMessages, IScheduler scheduler)
         {
             //Returns a HeartbeatLost if we don't see a heartbeat for 3 seconds.
             return heartbeatMessages
                 .OfType<Heartbeat>()
                 .Cast<Event>()
-                .Timeout(TimeSpan.FromSeconds(3), Observable.Return(new HeartbeatLost())).OfType<HeartbeatLost>();
+                .Timeout(TimeSpan.FromSeconds(3), Observable.Return(new HeartbeatLost()), scheduler).OfType<HeartbeatLost>();
         }
     }
 

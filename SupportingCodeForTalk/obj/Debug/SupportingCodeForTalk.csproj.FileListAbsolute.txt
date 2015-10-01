@@ -12,3 +12,5 @@ C:\git\VirtualTimeTestingRx\SupportingCodeForTalk\bin\Debug\System.Reactive.Plat
 C:\git\VirtualTimeTestingRx\SupportingCodeForTalk\obj\Debug\SupportingCodeForTalk.csprojResolveAssemblyReference.cache
 C:\git\VirtualTimeTestingRx\SupportingCodeForTalk\obj\Debug\SupportingCodeForTalk.exe
 C:\git\VirtualTimeTestingRx\SupportingCodeForTalk\obj\Debug\SupportingCodeForTalk.pdb
+C:\git\VirtualTimeTestingRx\SupportingCodeForTalk\bin\Debug\Microsoft.Reactive.Testing.dll
+C:\git\VirtualTimeTestingRx\SupportingCodeForTalk\bin\Debug\Microsoft.Reactive.Testing.xml
